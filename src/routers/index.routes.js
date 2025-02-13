@@ -1,9 +1,9 @@
 import portfolioRoute from "./portfolio.routes.js";
-import applyMiddleware from "../libs/applyMiddleware.js";
-import { logger1 } from "../middlewares/log.middleware.js";
+import applyMiddleware from "../utils/applyMiddleware.js";
+import setCorsHeader from "../middlewares/cors.middleware.js";
+import errorHandler from "../utils/errorHandling.js";
 
 // Middleware pipeline
-
 const routes = {
   "/portfolio": portfolioRoute,
 };
@@ -17,10 +17,9 @@ function router(req, res) {
     }
   }
   if (routeFn) {
-    applyMiddleware(req, res, [logger1], routeFn);
+    applyMiddleware(req, res, [setCorsHeader], routeFn);
   } else {
-    res.writeHead(404, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ message: "Route Not Found" }));
+    errorHandler(res, 404, "Route Not Found");
   }
 }
 

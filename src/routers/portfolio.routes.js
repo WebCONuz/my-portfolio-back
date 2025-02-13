@@ -1,4 +1,4 @@
-import applyMiddleware from "../libs/applyMiddleware.js";
+import applyMiddleware from "../utils/applyMiddleware.js";
 import { logger2 } from "../middlewares/log.middleware.js";
 import {
   getAll,
