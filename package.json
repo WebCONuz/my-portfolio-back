@@ -17,6 +17,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.4.7"
+    "chalk": "^5.4.1",
+    "dotenv": "^16.4.7",
+    "pg": "^8.13.3"
   }
 }
