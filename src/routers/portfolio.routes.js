@@ -4,6 +4,7 @@ import {
   getAll,
   getOne,
   getByQuery,
+  getSearch,
   create,
   edit,
   remove,
@@ -12,11 +13,12 @@ import getParams from "../utils/getParams.js";
 
 function portfolioRoutes(req, res) {
   applyMiddleware(req, res, [logger], function (req, res) {
-    const { query, id } = getParams(req);
+    const { query, search, id } = getParams(req);
     // GET
     if (req.method === "GET") {
       if (id) getOne(req, res);
       else if (query) getByQuery(req, res);
+      else if (search) getSearch(req, res);
       else getAll(req, res);
     }
     // POST

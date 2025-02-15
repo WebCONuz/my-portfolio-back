@@ -8,8 +8,19 @@ function getParams(req) {
       return item;
     }
   });
+  let search = null;
+  let query = parsedUrl.search ? parsedUrl.query : null;
+  if (query) {
+    for (let item in query) {
+      if (item === "search") {
+        search = query[item];
+        query = null;
+      }
+    }
+  }
   return {
-    query: parsedUrl.query,
+    query,
+    search,
     id: Number(id),
   };
 }

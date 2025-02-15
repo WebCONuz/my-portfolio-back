@@ -16,6 +16,23 @@ export const getByQuery = async (req, res) => {
   try {
     const { query } = getParams(req);
     const portfolios = await portfolioService.getByQuery(query);
+    if (portfolios.length === 0)
+      return errorHandler(res, 404, "Bunday data topilmadi");
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(portfolios));
+  } catch (error) {
+    errorHandler(res, 500, error.message);
+  }
+};
+
+export const getSearch = async (req, res) => {
+  try {
+    const { search } = getParams(req);
+    const portfolios = await portfolioService.getSearch(search);
+    if (portfolios.length === 0)
+      return errorHandler(res, 404, "Bunday data topilmadi");
+
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(portfolios));
   } catch (error) {

@@ -5,8 +5,25 @@ export default {
     const data = await pool.query("SELECT * FROM portfolio");
     return data.rows;
   },
-  getByQuery: async (query) => {
-    return query;
+  getByQuery: async (reqQuery) => {
+    let query = "SELECT * FROM portfolio WHERE 1=1";
+    let paramIndex = 1;
+    let params = [];
+
+    for (let item in reqQuery) {
+      query += ` AND ${item}=$${paramIndex++}`;
+      params.push(reqQuery[item]);
+    }
+
+    const data = await pool.query(query, params);
+    return data.rows;
+  },
+  getSearch: async (search) => {
+    const data = await pool.query(
+      "SELECT * FROM portfolio WHERE project_name ILIKE $1",
+      [`%${search}%`]
+    );
+    return data.rows;
   },
   getOne: async (id) => {
     const data = await pool.query("SELECT * FROM portfolio WHERE id=$1", [id]);
