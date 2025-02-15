@@ -7,10 +7,10 @@ export const createTables = async () => {
             id SERIAL PRIMARY KEY, 
             project_name VARCHAR(255) NOT NULL,
             thumbnail VARCHAR(255) NOT NULL,
-            category VARCHAR(255) NOT NULL
+            category VARCHAR(255) NOT NULL,
             project_info TEXT,
             project_link VARCHAR(255),
-            is_active BOOLEAN,
+            is_active BOOLEAN DEFAULT true,
             createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             updatedAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
         )`,

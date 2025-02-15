@@ -14,10 +14,12 @@ const pool = new Pool({
 
 export const connectDatabase = async () => {
   try {
-    // database ga ulangan klientni olish
+    // connect to DB
     const client = await pool.connect();
-    console.log(chalk.green(`App connected on DB: ${client.database}`));
-    // Bu ulanish band bo'lib qolishini oldini oladi
+    console.log(
+      `${chalk.green("Server connected DB:")} ${chalk.yellow(client.database)}`
+    );
+    // Release DB
     client.release();
   } catch (err) {
     console.error(err);

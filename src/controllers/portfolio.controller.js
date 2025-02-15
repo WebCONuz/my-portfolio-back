@@ -12,6 +12,31 @@ export const getAll = async (req, res) => {
   }
 };
 
+export const getByQuery = async (req, res) => {
+  try {
+    const { query } = getParams(req);
+    const portfolios = await portfolioService.getByQuery(query);
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(portfolios));
+  } catch (error) {
+    errorHandler(res, 500, error.message);
+  }
+};
+
+export const getOne = async (req, res) => {
+  try {
+    const { id } = getParams(req);
+    const data = await portfolioService.getOne(id);
+    if (!data) return errorHandler(res, 404, "Not found");
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.write(JSON.stringify({ status: "OK", data }));
+    res.end();
+  } catch (error) {
+    errorHandler(res, 500, error.message);
+  }
+};
+
 export const create = async (req, res) => {
   try {
     let body = "";
@@ -29,25 +54,11 @@ export const create = async (req, res) => {
   }
 };
 
-export const getOne = async (req, res) => {
-  try {
-    const id = getParams(req);
-    const data = await portfolioService.getOne(id);
-    if (!data) errorHandler(res, 404, "Not found");
-
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.write(JSON.stringify({ status: "OK", data }));
-    res.end();
-  } catch (error) {
-    errorHandler(res, 500, error.message);
-  }
-};
-
 export const edit = async (req, res) => {
   try {
-    const id = getParams(req);
+    const { id } = getParams(req);
     const oldData = await portfolioService.getOne(id);
-    if (!oldData) errorHandler(res, 404, "Not found");
+    if (!oldData) return errorHandler(res, 404, "Not found");
 
     let body = "";
     req.on("data", (chunk) => {
@@ -55,7 +66,17 @@ export const edit = async (req, res) => {
     });
     req.on("end", async () => {
       let reqBody = JSON.parse(body);
-      const editedData = await portfolioService.update(+id, reqBody);
+      const editedData = await portfolioService.update(id, {
+        project_name: reqBody.project_name || oldData.project_name,
+        thumbnail: reqBody.thumbnail || oldData.thumbnail,
+        category: reqBody.category || oldData.category,
+        project_info: reqBody.project_info || oldData.project_info,
+        project_link: reqBody.project_link || oldData.project_link,
+        is_active:
+          reqBody.is_active !== undefined
+            ? reqBody.is_active
+            : oldData.is_active,
+      });
       res.writeHead(200, { "Content-Type": "application/json" });
       res.write(JSON.stringify({ status: "UPDATED", data: editedData }));
       res.end();
@@ -67,11 +88,11 @@ export const edit = async (req, res) => {
 
 export const remove = async (req, res) => {
   try {
-    const id = getParams(req);
+    const { id } = getParams(req);
     const oldData = await portfolioService.getOne(id);
     if (!oldData) errorHandler(res, 404, "Not found");
 
-    await portfolioService.delete(+id);
+    await portfolioService.delete(id);
     res.writeHead(200, { "Content-Type": "application/json" });
     res.write(JSON.stringify({ status: "OK", id }));
     res.end();

@@ -8,7 +8,10 @@ function getParams(req) {
       return item;
     }
   });
-  return Number(id);
+  return {
+    query: parsedUrl.query,
+    id: Number(id),
+  };
 }
 
 export default getParams;
